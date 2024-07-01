@@ -18,9 +18,6 @@ const app = new Frog({
   hub: neynar({ apiKey: process.env.NEYNAR_API_KEY as string}),
 })
 const usdcContractAddress = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'; 
-// Uncomment to use Edge Runtime
-// export const runtime = 'edge'
-
 
 async function urlToBase64(imageUrl:string) {
   try {
@@ -41,41 +38,15 @@ app.frame('/owl/:id', async (c) => {
   const id = c.req.param('id');
   const { imageUrl,walletAddress,price }=await fetchKeyDetails(id);
   console.log("IMG image url",imageUrl,walletAddress)
-//   const body: FrameRequest = await c.req.json()
-//   const { isValid, message } = await getFrameMessage(body, {
-//     neynarApiKey: '3D4F2112-0E0B-4955-A49D-540975BB75B7'
-//   })
-// console.log('shit",',message);
-// const wallets = message?.interactor.verified_accounts;
-// //3D4F2112-0E0B-4955-A49D-540975BB75B7
-
-// console.log("fucking " , wallets)
-// if(isValid){
   return c.res({
     action: `/buy/${id}`,
    image:imageUrl,
-
     imageAspectRatio:"1:1",
-    // headers:{
-    //   'Content-Type': 'image/jpg'
-    // },
     intents: [
-      // <TextInput placeholder="($USDC | ETH)" />,
       <Button.Transaction  target={`/send-usdc/${walletAddress}/${price}`}>Mint</Button.Transaction>,
     ]
   })
-// }
-// else{
-  // return c.res({
-  //   image: `https://gateway.lighthouse.storage/ipfs/QmZ4xVStphv71Qp2Z9d7b6qwKChrrUmu5LvCwccsZJ8899`,
-  //   headers:{
-  //     'Content-Type': 'image/jpeg'
-  //   },
-  //   intents: [
-  //     <Button key='pay' value='P'> pay</Button>,
-  //   ]
-  // })
-// }
+
 })
 app.transaction('/send-usdc/:walletAddress/:price',async (c) => {
   const walletAddress = c.req.param('walletAddress');
@@ -96,24 +67,15 @@ app.transaction('/send-usdc/:walletAddress/:price',async (c) => {
     // @ts-ignore
     to: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   })
-
-
 })
-
 
   app.frame('/buy/:id', async(c) => {
     const id = c.req.param('id');
-  const { apiKey,collectionAddress, chainId, imageUrl,walletAddress }=await fetchKeyDetails(id);
+  const { apiKey,collectionAddress, chainId, imageUrl,walletAddress,gmailAddress }=await fetchKeyDetails(id);
     const {mimeType,base64} = await urlToBase64(imageUrl);
 let typeImg=mimeType.split("/")
-    console.log('bongu',base64);
+    console.log('base64',base64);
     // Send the base64String to your API or store it in MongoDB
-    const body: FrameRequest = await c.req.json()
-    const { isValid, message } = await getFrameMessage(body, {
-      neynarApiKey: process.env.NEYNAR_API_KEY
-    })
-  
-  const wallets = message?.interactor.verified_accounts;
 
   const options = {
     method: 'POST',
@@ -127,12 +89,12 @@ let typeImg=mimeType.split("/")
       imageContent: base64,
       authMode: 'project',
       //@ts-ignore
-      to: [wallets[0]],
+      to:[gmailAddress] ,
       imageSuffix: typeImg[1],
     }
   };
  
-if(isValid){
+
   const response = await axios.request(options);
   console.log(response.data);
   const tokenId = response.data.tokens[0].tokenId;
@@ -148,19 +110,9 @@ console.log("Token ID:", tokenId);
         <Button key='pay' value='P'>Sucessfully Minted TokenId:{tokenId}</Button>,
       ]
     })
-  }
-  else{
-    return c.res({
-      image: `https://gateway.lighthouse.storage/ipfs/QmZ4xVStphv71Qp2Z9d7b6qwKChrrUmu5LvCwccsZJ8899`,
-      headers:{
-        'Content-Type': 'image/jpeg'
-      },
-      intents: [
-        <Button key='pay' value='P'>Retry</Button>,
-      ]
-    })
-  }
+
   })
+
 
 app.frame('/finish',async (c) => {
     return c.res({

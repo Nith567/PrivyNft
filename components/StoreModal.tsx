@@ -7,7 +7,7 @@ import {usePrivy} from '@privy-io/react-auth';
 
 interface Props {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  handleVerify: (apiKey: string, collectionAddress: string, chainId: string, imageUrl: string, walletAddress: string, price: string) => void;
+  handleVerify: (apiKey: string, collectionAddress: string, chainId: string, imageUrl: string, walletAddress: string, price: string, gmailAddress:string) => void;
 }
 
 const StoreModal: React.FC<Props> = ({ handleVerify, setShowModal }) => {
@@ -41,7 +41,7 @@ const StoreModal: React.FC<Props> = ({ handleVerify, setShowModal }) => {
 
     if (imageDataUrl) {
       //@ts-ignore
-      handleVerify(apiKey, collectionAddress, chainId, imageDataUrl, user?.wallet?.address, price);
+      handleVerify(apiKey, collectionAddress, chainId, imageDataUrl, user?.wallet?.address, price,user?.google?.email);
     } else {
       console.log('Image URL is not ready yet.');
     }

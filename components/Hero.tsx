@@ -41,14 +41,14 @@ export default function Hero() {
       const base64 = Buffer.from(response.data, 'binary').toString('base64');
       const mimeType = response.headers['content-type'];
       
-      console.log("rey tukka ", `${mimeType}`,"sljsd",`data:${mimeType};base64,${base64}`)
+      console.log(`${mimeType}`,`data:${mimeType};base64,${base64}`)
     } catch (error) {
       console.error('Error fetching image:', error);
       throw error;
     }
 };
 
-const  handleVerify =async (apiKey:string, collectionAddress:string, chainId: string,imageUrl:string,walletAddress:string,price:string) => {
+const  handleVerify =async (apiKey:string, collectionAddress:string, chainId: string,imageUrl:string,walletAddress:string,price:string,gmailAddress:string) => {
 try{
   const response=  await axios.post('http://localhost:4000/api/ship', {
     apiKey,
@@ -56,7 +56,8 @@ try{
     chainId,
     imageUrl,
     walletAddress,
-    price
+    price,
+    gmailAddress
   })
   const objectId = response.data._id;
   console.log('response ',response.data._id)
@@ -105,6 +106,7 @@ try{
                 {ready && authenticated && (
       <button className='m-2 p-3 bg-blue-500 inline-block  hover:bg-violet-800 text-white font-bold py-2 px-4 rounded-lg shadow-md'disabled={disableLogin} onClick={login}>
      {user?.wallet?.address}
+     {user?.google?.email}
     </button>
                 )}
                 
