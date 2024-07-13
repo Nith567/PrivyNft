@@ -78,7 +78,7 @@ try{
         <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-4">
             <h1 className="max-w-2xl text-3xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:col-span-2 xl:col-auto">
-            Your subscribers can mint your NFTs directly within Frames on any EVM or custom rollup using{" "}
+            Gasless NFTs Experience directly within Frames on any EVM or custom rollup using{" "}
               <span className={`${sasita.className}`}> 
               <a href="https://docs.owl.build/dashboard-docs" className="-m-1.5 p-1.5">
               Owl Privy
@@ -106,7 +106,6 @@ try{
                 {ready && authenticated && (
       <button className='m-2 p-3 bg-blue-500 inline-block  hover:bg-violet-800 text-white font-bold py-2 px-4 rounded-lg shadow-md'disabled={disableLogin} onClick={login}>
      {user?.wallet?.address}
-     {user?.google?.email}
     </button>
                 )}
                 
